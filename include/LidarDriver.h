@@ -21,6 +21,7 @@ double res = 1;
 std::vector<std::vector<double>> buffer(BUFFER_DIM, std::vector<double>(max_range/res+1));
 int oldest_scan = 0;
 int newest_scan = 0;
+void increment(int index);
 };
 
 #endif // LIDARDRIVER_H
