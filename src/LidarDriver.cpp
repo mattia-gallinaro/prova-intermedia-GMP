@@ -1,13 +1,5 @@
 #include "LidarDriver.h"
 class LidarDriver{
-private:
-
-int increment(int index)
-{
-    if(index==BUFFER_DIM-1) index = 0;
-    else index++;
-    return index;
-}
 
 public:
 
@@ -34,5 +26,17 @@ std::vector<double> get_scan(void)
 }
 void clear_buffer(void);
 double get_distance(double angle) const;
-void operator<<(std::vector<double> scan) const;
+
+private:
+
+int increment(int index)
+{
+    if(index==BUFFER_DIM-1) index = 0;
+    else index++;
+    return index;
+}
+
 };
+
+
+void operator<<(std::vector<double> scan) const;
