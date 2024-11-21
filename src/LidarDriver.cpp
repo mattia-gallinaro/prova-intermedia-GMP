@@ -22,9 +22,27 @@ void new_scan(std::vector<double> scan)
 
 std::vector<double> get_scan(void)
 {
-
+    /*
+    std::vector<double> container(181, 0);//sto inizializzando un nuovo vettore double con 181 valori a 0 che conterra' le letture da restituire
+    std::copy( buffer[oldest_scan].begin(), buffer[oldest_scan].end(), container);
+    for(int i = 0; i < buffer[oldest_scan].size() ; i++){
+        buffer[oldest_scan][i] = 0;
+    }
+    oldest_scan = increment(oldest_scan);
+    return container;
+    */
+};
+//sono due foreach,  li devo testare
+void clear_buffer(void)
+{
+    /*for(auto i: buffer) auto può essere sostituito con std::vector<double>,
+    fa si che sia il compilatore ad assegnare automaticamente il tipo di dato , è il T
+    {
+        for(double j : i)
+            j=0;//setto i valori a 0
+    }*/
 }
-void clear_buffer(void);
+
 double get_distance(double angle) const;
 
 private:
