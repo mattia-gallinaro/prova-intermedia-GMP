@@ -1,11 +1,12 @@
-class LinearDriver{
+#include "LidarDriver.h"
+class LidarDriver{
 
 public:
 const int BUFFER_DIM = 10;
-const int max_range = 180;
+const int MAX_RANGE = 180;
 //constructors
-LinearDriver(void){};
-LinearDriver(double ang_res)
+LidarDriver(void){};
+LidarDriver(double ang_res)
 {
     if(ang_res>=0.1 && ang_res<=1) res = ang_res;
     else throw invalid_argument("angular resolution not valid, must be [0.1,1]");
