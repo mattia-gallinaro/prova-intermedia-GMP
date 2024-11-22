@@ -4,16 +4,19 @@ class LidarDriver{
 public:
 
 //constructors
-LidarDriver(void){};// costruttore da fare (sia void che non)-> abbiamo modificato il buffer(data member) e ora non è sistemato di default
+LidarDriver(void)
+buffer(BUFFER_DIM, std::vector<double>((MAX_RANGE / res) + 1))
+{}
 LidarDriver(double ang_res)
 {
     if(ang_res>=0.1 && ang_res<=1) res = ang_res;
-    else throw invalid_argument("angular resolution not valid, must be [0.1,1]");
+    else throw std::invalid_argument("angular resolution not valid, must be [0.1,1]");
+    buffer(BUFFER_DIM, std::vector<double>((MAX_RANGE / res) + 1));
 }
 //member functions
 void new_scan(std::vector<double> scan)
 {
-    if(increment(newest_scan)==oldest_scan) oldest_scan = increment(oldest_scan);
+    if(increment(newest_scan)==oldest_scan && newest_scan!=-1) oldest_scan = increment(oldest_scan);
     newest_scan = increment(newest_scan);
     buffer[newest_scan] = scan;
 }
@@ -55,4 +58,4 @@ int increment(int index)
 };
 
 
-void operator<<(std::vector<double> scan) const;
+std::ostream &operator<<(std::ostream &out, const std::vector<double> &last_scan);
