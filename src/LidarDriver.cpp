@@ -1,10 +1,8 @@
-#include "LidarDriver.h"
+#include "../include/LidarDriver.h"
 class LidarDriver{
 
 public:
 
-const int BUFFER_DIM = 10;
-const int MAX_RANGE = 180;
 //constructors
 LidarDriver(void){};// costruttore da fare (sia void che non)-> abbiamo modificato il buffer(data member) e ora non è sistemato di default
 LidarDriver(double ang_res)
