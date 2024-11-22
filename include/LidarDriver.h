@@ -18,7 +18,7 @@ double get_distance(double angle) const;
 
 private:
 double res = 1;
-std::vector<std::vector<double>> buffer(BUFFER_DIM, std::vector<double>(MAX_RANGE/res+1));
+std::vector<std::vector<double>> buffer;
 int oldest_scan = 0;
 int newest_scan = 0;
 void increment(int index);

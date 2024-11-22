@@ -6,7 +6,7 @@ public:
 const int BUFFER_DIM = 10;
 const int MAX_RANGE = 180;
 //constructors
-LidarDriver(void){};
+LidarDriver(void){};// costruttore da fare (sia void che non)-> abbiamo modificato il buffer(data member) e ora non è sistemato di default
 LidarDriver(double ang_res)
 {
     if(ang_res>=0.1 && ang_res<=1) res = ang_res;
