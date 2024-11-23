@@ -23,43 +23,48 @@ void new_scan(std::vector<double> scan)
 
 std::vector<double> get_scan(void)
 {
-    /*
+    
     std::vector<double> container(181, 0);//sto inizializzando un nuovo vettore double con 181 valori a 0 che conterra' le letture da restituire
     std::copy( buffer[oldest_scan].begin(), buffer[oldest_scan].end(), container);
     for(int i = 0; i < buffer[oldest_scan].size() ; i++){
         buffer[oldest_scan][i] = 0;
     }
-    oldest_scan = increment(oldest_scan);
+    if(oldest_scan == newest_scan){
+        oldest_scan = 0;
+        newest_scan = -1;
+    };//lo faccio perchè ho "eliminato" l'ultima scansione presente
     return container;
-    */
 };
 //sono due foreach,  li devo testare
 void clear_buffer(void)
 {
-    /*for(auto i: buffer) auto può essere sostituito con std::vector<double>,
-    fa si che sia il compilatore ad assegnare automaticamente il tipo di dato , è il T
+    for(auto i: buffer) //auto può essere sostituito con std::vector<double>,
+                        //fa si che sia il compilatore ad assegnare automaticamente il tipo di dato , è il T
     {
         for(double j : i)
             j=0;//setto i valori a 0
-    }*/
+    }
+    oldest_scan = 0;
+    newest_scan = -1; //per indicare che ora il buffer non contiene più nessuna lettura
 }
 
 double get_distance(double angle) const 
 {
+    if (angle < 0 || angle > 180)throw std::invalid_argument("angle not valid must be between 0 and 180"); //così siamo sicuri che si possa cercare un'angolo 
     // buffer vuoto
-    if (buffer.size() == 0 || /*non esiste il vector piu' recente*/) return -1.0;
+    if (newest_scan == - 1)throw std::invalid_argument("angle not valid must be between 0 and 180");// per ora ho messo invalid_argument , bisogna modificarlo con uno più specifico per indicare che il buffer non contiene scansioni
 
     // calcola la posizione della teoretica lettura in base alla risoluzione
     // per accomodare che la risoluzione e' fornita dall'utente, arrotondo per trovare l'indice
     double num_lettura = angle / res; 
     int index = (int) std::round(num_lettura);
 
-    if(index < 0) return buffer[newest_scan][0];
+    //if(index < 0) return buffer[newest_scan][0]; non serve perchè non dovremmo accettare valori negativi siccome sono sempre al di fuori dell'array
 
     // lunghezza della scansione piu' recente, la uso per controllare che l'angolo fornito in input non sbordi
-    int newest_size = buffer[newest_scan].size();
+    // int newest_size = buffer[newest_scan].size();
     // angolo fornito va oltre le letture fatte, restituisci l'ultima lettura fatta
-    else if(index > newest_size) return buffer[newest_scan][newest_size - 1];
+    // else if(index > newest_size) return buffer[newest_scan][newest_size - 1];  <- non dovrebbe servire perchè l'angolo che dovrebbe passare deve essere compreso tra 0 e 180 così l'utente non può leggere valori al di fuori dell'array
 
     return buffer[newest_scan][index];
 };
