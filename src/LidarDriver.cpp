@@ -44,7 +44,25 @@ void clear_buffer(void)
     }*/
 }
 
-double get_distance(double angle) const;
+double get_distance(double angle) const 
+{
+    // buffer vuoto
+    if (buffer.size() == 0 || /*non esiste il vector piu' recente*/) return -1.0;
+
+    // calcola la posizione della teoretica lettura in base alla risoluzione
+    // per accomodare che la risoluzione e' fornita dall'utente, arrotondo per trovare l'indice
+    double num_lettura = angle / res; 
+    int index = (int) std::round(num_lettura);
+
+    if(index < 0) return buffer[newest_scan][0];
+
+    // lunghezza della scansione piu' recente, la uso per controllare che l'angolo fornito in input non sbordi
+    int newest_size = buffer[newest_scan].size();
+    // angolo fornito va oltre le letture fatte, restituisci l'ultima lettura fatta
+    else if(index > newest_size) return buffer[newest_scan][newest_size - 1];
+
+    return buffer[newest_scan][index];
+};
 
 private:
 
