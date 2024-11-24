@@ -108,7 +108,7 @@ std::ostream &operator<<(std::ostream &out, const LidarDriver &lid)
     } 
     return out << measures;
     } 
-    catch(invalid_argument e)
+    catch(std::invalid_argument e)
     {
         return out << e << "\n";
     }
