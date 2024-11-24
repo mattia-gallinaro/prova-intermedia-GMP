@@ -5,8 +5,8 @@
 class LidarDriver{
 
 public:
-const int BUFFER_DIM{10};
-const int MAX_RANGE{180};
+static const int BUFFER_DIM{10};
+static const int MAX_RANGE{180};
 
 //constructors
 LidarDriver(void){};
@@ -17,6 +17,8 @@ void new_scan(std::vector<double> scan);
 std::vector<double> get_scan(void);
 void clear_buffer(void);
 double get_distance(double angle) const;
+std::vector<double> get_newest_scan(void) const;
+double get_res(void) const;
 
 private:
 double res{1};
@@ -26,6 +28,6 @@ int newest_scan{-1};
 void increment(int index);
 };
 
-std::ostream &operator<<(std::ostream &out, const std::vector<double> &last_scan);
+std::ostream &operator<<(std::ostream &out,  const LidarDriver &lid);
 
 #endif // LIDARDRIVER_H

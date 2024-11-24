@@ -32,9 +32,9 @@ std::vector<double> get_scan(void)
     if(oldest_scan == newest_scan){
         oldest_scan = 0;
         newest_scan = -1;
-    };//lo faccio perchè ho "eliminato" l'ultima scansione presente
+    }//lo faccio perchè ho "eliminato" l'ultima scansione presente
     return container;
-};
+}
 //sono due foreach,  li devo testare
 void clear_buffer(void)
 {
@@ -67,7 +67,18 @@ double get_distance(double angle) const
     // else if(index > newest_size) return buffer[newest_scan][newest_size - 1];  <- non dovrebbe servire perchè l'angolo che dovrebbe passare deve essere compreso tra 0 e 180 così l'utente non può leggere valori al di fuori dell'array
 
     return buffer[newest_scan][index];
-};
+}
+
+std::vector<double> get_newest_scan(void) const
+{
+    if(newest_scan==-1)throw std::invalid_argument("il buffer è vuoto");
+    return buffer[newest_scan];
+}
+
+double get_res(void) const
+{
+    return res;
+}
 
 private:
 
@@ -81,4 +92,24 @@ int increment(int index)
 };
 
 
-std::ostream &operator<<(std::ostream &out, const std::vector<double> &last_scan);
+std::ostream &operator<<(std::ostream &out, const LidarDriver &lid)
+{
+    try{
+    std::vector<double> scan = lid.get_newest_scan();
+    double ang_res = lid.get_res();   
+    string measures = "";
+    double current_angle = 0;
+
+    for(double i : scan)
+    {
+        measures += current_angle + "° : "+ i + "\n";
+        if((current_angle+ang_res)<LidarDriver.MAX_RANGE)current_angle += ang_res;
+        else current_angle = LidarDriver.MAX_RANGE;
+    } 
+    return out << measures;
+    } 
+    catch(invalid_argument e)
+    {
+        return out << e << "\n";
+    }
+}
