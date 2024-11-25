@@ -33,6 +33,6 @@ std::vector<double> generate_distances(void){
   int upper = 2;
   std::default_random_engine rnd{std::random_device{}()};//permetter di generare i numeri random 
   std::uniform_real_distribution<double> dist(lower, upper);//per far si che ogni numero abbia la stessa probabilità di uscire
-
-  for(int i = 0; i < 180; i++);
+  std::vector<double> buff(180);
+  for(int i = 0; i < 180; i++) buff[i] = dist(rnd);
 }
