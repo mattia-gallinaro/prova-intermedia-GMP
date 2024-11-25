@@ -1,12 +1,13 @@
-#include "LidarDriver.h"
+#include "../include/LidarDriver.h"
 class LidarDriver{
 
 public:
-
 //constructors
-LidarDriver(void)
-buffer(BUFFER_DIM, std::vector<double>((MAX_RANGE / res) + 1))
-{}
+LidarDriver(void) 
+{
+    buffer(BUFFER_DIM, std::vector<double>((MAX_RANGE / res) + 1));
+}
+
 LidarDriver(double ang_res)
 {
     if(ang_res>=0.1 && ang_res<=1) res = ang_res;
@@ -16,23 +17,24 @@ LidarDriver(double ang_res)
 //member functions
 void new_scan(std::vector<double> scan)
 {
-    if(increment(newest_scan)==oldest_scan && newest_scan!=-1) oldest_scan = increment(oldest_scan);
+    if(increment(newest_scan)== oldest_scan && newest_scan!=-1) oldest_scan = increment(oldest_scan);
     newest_scan = increment(newest_scan);
     buffer[newest_scan] = scan;
 }
 
 std::vector<double> get_scan(void)
 {
-    
-    std::vector<double> container(181, 0);//sto inizializzando un nuovo vettore double con 181 valori a 0 che conterra' le letture da restituire
-    std::copy( buffer[oldest_scan].begin(), buffer[oldest_scan].end(), container);
-    for(int i = 0; i < buffer[oldest_scan].size() ; i++){
-        buffer[oldest_scan][i] = 0;
-    }
+    if(newest_scan==-1)throw std::invalid_argument("Il buffer e' vuoto");
+    std::vector<double> container((MAX_RANGE / res) + 1, 0);//sto inizializzando un nuovo vettore double con 181 valori a 0 che conterra' le letture da restituire
+    std::copy(buffer[oldest_scan].begin(), buffer[oldest_scan].end(), container);
+    std::fill(buffer[oldest_scan].begin(), buffer[oldest_scan].end(), 0);//resetto l'array che contiene le misurazioni meno recenti a 0
     if(oldest_scan == newest_scan){
         oldest_scan = 0;
         newest_scan = -1;
     }//lo faccio perchè ho "eliminato" l'ultima scansione presente
+    else{
+        oldest_scan = increment(oldest_scan);
+    }
     return container;
 }
 //sono due foreach,  li devo testare
@@ -50,9 +52,9 @@ void clear_buffer(void)
 
 double get_distance(double angle) const 
 {
-    if (angle < 0 || angle > 180)throw std::invalid_argument("angle not valid must be between 0 and 180"); //così siamo sicuri che si possa cercare un'angolo 
+    if (angle < 0 || angle > MAX_RANGE)throw std::invalid_argument("angle not valid must be between 0 and 180"); //così siamo sicuri che si possa cercare un'angolo 
     // buffer vuoto
-    if (newest_scan == - 1)throw std::invalid_argument("angle not valid must be between 0 and 180");// per ora ho messo invalid_argument , bisogna modificarlo con uno più specifico per indicare che il buffer non contiene scansioni
+    if (newest_scan == - 1)throw std::invalid_argument("Il buffer e' vuoto");// per ora ho messo invalid_argument , bisogna modificarlo con uno più specifico per indicare che il buffer non contiene scansioni
 
     // calcola la posizione della teoretica lettura in base alla risoluzione
     // per accomodare che la risoluzione e' fornita dall'utente, arrotondo per trovare l'indice
