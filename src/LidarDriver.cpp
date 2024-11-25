@@ -17,6 +17,10 @@ LidarDriver(double ang_res)
 //member functions
 void new_scan(const std::vector<double>& scan)
 {
+    for(double i : scan)
+    {
+        if(i< 0) throw std::invalid_argument("negative values not allowed");
+    }
     int size_to_copy = (MAX_RANGE / res) + 1;
     if(increment(newest_scan)== oldest_scan && newest_scan!=-1) oldest_scan = increment(oldest_scan);
     newest_scan = increment(newest_scan);
