@@ -15,11 +15,13 @@ LidarDriver(double ang_res)
     buffer(BUFFER_DIM, std::vector<double>((MAX_RANGE / res) + 1));
 }
 //member functions
-void new_scan(std::vector<double> scan)
+void new_scan(const std::vector<double>& scan)
 {
+    int size_to_copy = (MAX_RANGE / res) + 1;
     if(increment(newest_scan)== oldest_scan && newest_scan!=-1) oldest_scan = increment(oldest_scan);
     newest_scan = increment(newest_scan);
-    buffer[newest_scan] = scan;
+    if(size_to_copy > scan.size()) size_to_copy = scan.size();
+    std::copy(scan.begin(), size_to_copy, buffer[newest_scan]);
 }
 
 std::vector<double> get_scan(void)

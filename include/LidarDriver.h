@@ -14,7 +14,7 @@ LidarDriver(void){};
 LidarDriver(double ang_res);
 
 //member functions
-void new_scan(std::vector<double> scan);
+void new_scan(const std::vector<double>& scan);
 std::vector<double> get_scan(void);
 void clear_buffer(void);
 double get_distance(double angle) const;

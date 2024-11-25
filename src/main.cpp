@@ -12,7 +12,9 @@ int main(void){
   try{
     driver_test.get_scan();
   }catch(std::invalid_argument e) {
-    std::cout << e << std::
+    std::cout << "il buffer e' vuoto" << std::endl;
+  }
+  driver_test.new_scan(distances);//aggiungo 1 
 }
 
 void test_random(){
@@ -32,6 +34,5 @@ std::vector<double> generate_distances(void){
   std::default_random_engine rnd{std::random_device{}()};//permetter di generare i numeri random 
   std::uniform_real_distribution<double> dist(lower, upper);//per far si che ogni numero abbia la stessa probabilità di uscire
 
-  for(int i = 0; i < 10; i++)std::cout << dist(rnd) << std::endl; ;//genera un numero random compreso nella distribuzione uniforme ,
-                                                                   // quindi tra upper e lower
+  for(int i = 0; i < 180; i++);
 }
