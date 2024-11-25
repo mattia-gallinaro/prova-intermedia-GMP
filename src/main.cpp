@@ -45,12 +45,12 @@ int main(void){
   //test get_distance
   driver_test.new_scan(distances);
   double angle = 104;
-  std::cout<<"distance at angle "<< angle<<"° : "<<driver_test.get_distance(angle)<<endl;
+  std::cout<<"distance at angle "<< angle<<"° : "<<driver_test.get_distance(angle)<<std::endl;
   int position = (int) std::round(angle/driver_test.get_res());
   print_angle(distances,position);
 
   //test di overload <<
-  cout<<driver_test<<endl;
+  std::cout<<driver_test<<std::endl;
   print_vector(distances);
 
   return 0;
@@ -70,10 +70,10 @@ std::vector<double> generate_distances(void){
 void print_vector(const std::vector<double>& v)
 {
   for(double i : v) std::cout << i << " ";
-  std::cout<< endl;
+  std::cout<< std::endl;
 }
 
 void print_angle(const std::vector<double>& v,int position)
 {
-  std::cout<<v[position]<<endl; 
+  std::cout<<v[position]<<std::endl; 
 }

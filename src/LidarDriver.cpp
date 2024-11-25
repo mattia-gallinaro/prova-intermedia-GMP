@@ -1,21 +1,21 @@
 #include "../include/LidarDriver.h"
-class LidarDriver{
 
-public:
+
+
 //constructors
-LidarDriver(void) 
+LidarDriver::LidarDriver(void) 
 {
     buffer(BUFFER_DIM, std::vector<double>((MAX_RANGE / res) + 1));
 }
 
-LidarDriver(double ang_res)
+LidarDriver::LidarDriver(double ang_res)
 {
     if(ang_res>=0.1 && ang_res<=1) res = ang_res;
     else throw std::invalid_argument("angular resolution not valid, must be [0.1,1]");
     buffer(BUFFER_DIM, std::vector<double>((MAX_RANGE / res) + 1));
 }
 //member functions
-void new_scan(const std::vector<double>& scan)
+void LidarDriver::new_scan(const std::vector<double>& scan)
 {
     for(double i : scan)
     {
@@ -31,7 +31,7 @@ void new_scan(const std::vector<double>& scan)
     std::copy(scan.begin(), scan.begin() + size_to_copy - 1, buffer[newest_scan]);// permette di copiare tutti i valori possibili da scan in buffer
 }
 
-std::vector<double> get_scan(void)
+std::vector<double> LidarDriver::get_scan(void)
 {
     if(newest_scan==-1)throw std::invalid_argument("Il buffer e' vuoto");
     std::vector<double> container((MAX_RANGE / res) + 1, 0);//sto inizializzando un nuovo vettore double con 181 valori a 0 che conterra' le letture da restituire
@@ -47,7 +47,7 @@ std::vector<double> get_scan(void)
     return container;
 }
 //sono due foreach,  li devo testare
-void clear_buffer(void)
+void LidarDriver::clear_buffer(void)
 {
     for(auto i: buffer) //auto può essere sostituito con std::vector<double>,
                         //fa si che sia il compilatore ad assegnare automaticamente il tipo di dato , è il T
@@ -59,7 +59,7 @@ void clear_buffer(void)
     newest_scan = -1; //per indicare che ora il buffer non contiene più nessuna lettura
 }
 
-double get_distance(double angle) const 
+double LidarDriver::get_distance(double angle) const 
 {
     if (angle < 0 || angle > MAX_RANGE)throw std::invalid_argument("angle not valid must be between 0 and 180"); //così siamo sicuri che si possa cercare un'angolo 
     // buffer vuoto
@@ -80,27 +80,26 @@ double get_distance(double angle) const
     return buffer[newest_scan][index];
 }
 
-std::vector<double> get_newest_scan(void) const
+std::vector<double> LidarDriver::get_newest_scan(void) const
 {
     if(newest_scan==-1)throw std::invalid_argument("il buffer è vuoto");
     return buffer[newest_scan];
 }
 
-double get_res(void) const
+double LidarDriver::get_res(void) const
 {
     return res;
 }
 
-private:
 
-int increment(int index)
+int LidarDriver::increment(int index)
 {
     if(index==BUFFER_DIM-1) index = 0;
     else index++;
     return index;
 }
 
-};
+
 
 
 std::ostream &operator<<(std::ostream &out, const LidarDriver &lid)
@@ -108,12 +107,12 @@ std::ostream &operator<<(std::ostream &out, const LidarDriver &lid)
     try{
     std::vector<double> scan = lid.get_newest_scan();
     double ang_res = lid.get_res();   
-    string measures = "";
+    std::string measures = "";
     double current_angle = 0;
 
     for(double i : scan)
     {
-        measures += current_angle + "° : "+ i + "\n";
+        measures += std::to_string(current_angle) + "° : "+ std::to_string(i) + "\n";
         if((current_angle+ang_res)<LidarDriver.MAX_RANGE)current_angle += ang_res;
         else current_angle = LidarDriver.MAX_RANGE;
     } 
