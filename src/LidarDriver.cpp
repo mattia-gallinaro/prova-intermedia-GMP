@@ -20,9 +20,11 @@ void new_scan(const std::vector<double>& scan)
     int size_to_copy = (MAX_RANGE / res) + 1;
     if(increment(newest_scan)== oldest_scan && newest_scan!=-1) oldest_scan = increment(oldest_scan);
     newest_scan = increment(newest_scan);
-    if(size_to_copy > scan.size()) size_to_copy = scan.size();
+    if(size_to_copy > scan.size()) {
+        size_to_copy = scan.size();
+        std::fill(buffer.begin() + size_to_copy, buffer.end(), 0);
+    }
     std::copy(scan.begin(), scan.begin() + size_to_copy - 1, buffer[newest_scan]);// permette di copiare tutti i valori possibili da scan in buffer
-    if(buffer[newest_scan].size() > size_to_copy) std::fill(buffer.begin() + size_to_copy, buffer.end(), 0);
 }
 
 std::vector<double> get_scan(void)
