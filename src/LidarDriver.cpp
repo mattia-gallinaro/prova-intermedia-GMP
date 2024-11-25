@@ -120,6 +120,6 @@ std::ostream &operator<<(std::ostream &out, const LidarDriver &lid)
     } 
     catch(std::invalid_argument e)
     {
-        return out << e << "\n";
+        return out <<" il buffer è vuoto "<< "\n";
     }
 }
