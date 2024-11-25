@@ -4,15 +4,13 @@
 
 //constructors
 LidarDriver::LidarDriver(void) 
-{
-    buffer(BUFFER_DIM, std::vector<double>(/*(int)*/(MAX_RANGE / res) + 1));
-}
+    : buffer(BUFFER_DIM, std::vector<double>((MAX_RANGE / res) + 1))
+{}
 
 LidarDriver::LidarDriver(double ang_res)
+    : res{ang_res}, buffer(BUFFER_DIM, std::vector<double>((MAX_RANGE / res) + 1))
 {
-    if(ang_res>=0.1 && ang_res<=1) res = ang_res;
-    else throw std::invalid_argument("angular resolution not valid, must be [0.1,1]");
-    buffer(BUFFER_DIM, std::vector<double>((MAX_RANGE / res) + 1));
+    if(ang_res<0.1 || ang_res>1)throw std::invalid_argument("angular resolution not valid, must be [0.1,1]");
 }
 //member functions
 void LidarDriver::new_scan(const std::vector<double>& scan)
@@ -26,16 +24,16 @@ void LidarDriver::new_scan(const std::vector<double>& scan)
     newest_scan = increment(newest_scan);
     if(size_to_copy > scan.size()) {
         size_to_copy = scan.size();
-        std::fill(buffer.begin() + size_to_copy, buffer.end(), 0);
+        std::fill(buffer[newest_scan].begin() + size_to_copy, buffer[newest_scan].end(), 0);
     }
-    std::copy(scan.begin(), scan.begin() + size_to_copy - 1, buffer[newest_scan]);// permette di copiare tutti i valori possibili da scan in buffer
+    std::copy(scan.begin(), scan.begin() + size_to_copy - 1, buffer[newest_scan].begin());// permette di copiare tutti i valori possibili da scan in buffer
 }
 
 std::vector<double> LidarDriver::get_scan(void)
 {
     if(newest_scan==-1)throw std::invalid_argument("Il buffer e' vuoto");
     std::vector<double> container((MAX_RANGE / res) + 1, 0);//sto inizializzando un nuovo vettore double con 181 valori a 0 che conterra' le letture da restituire
-    std::copy(buffer[oldest_scan].begin(), buffer[oldest_scan].end(), container);
+    std::copy(buffer[oldest_scan].begin(), buffer[oldest_scan].end(), container.begin());
     std::fill(buffer[oldest_scan].begin(), buffer[oldest_scan].end(), 0);//resetto l'array che contiene le misurazioni meno recenti a 0
     if(oldest_scan == newest_scan){
         oldest_scan = 0;
