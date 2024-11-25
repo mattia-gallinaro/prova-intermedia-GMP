@@ -5,7 +5,7 @@
 //constructors
 LidarDriver::LidarDriver(void) 
 {
-    buffer(BUFFER_DIM, std::vector<double>((MAX_RANGE / res) + 1));
+    buffer(BUFFER_DIM, std::vector<double>(/*(int)*/(MAX_RANGE / res) + 1));
 }
 
 LidarDriver::LidarDriver(double ang_res)
