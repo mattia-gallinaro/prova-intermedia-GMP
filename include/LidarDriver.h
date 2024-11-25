@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <vector>
+#include <cmath>
 class LidarDriver{
 
 public:
@@ -10,7 +11,7 @@ static const int BUFFER_DIM{10};
 static const int MAX_RANGE{180};
 
 //constructors
-LidarDriver(void){};
+LidarDriver(void);
 LidarDriver(double ang_res);
 
 //member functions
@@ -26,7 +27,7 @@ double res{1};
 std::vector<std::vector<double>> buffer;
 int oldest_scan{0};
 int newest_scan{-1};
-void increment(int index);
+int increment(int index);
 };
 
 std::ostream &operator<<(std::ostream &out,  const LidarDriver &lid);

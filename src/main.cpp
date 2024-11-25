@@ -18,19 +18,19 @@ int main(void){
     }
   //testing di new_scan
     std::vector<double> distances = generate_distances();
-    for(int i = 0 ; i<LidarDriver.BUFFER_DIM+5; i++)
+    for(int i = 0 ; i<LidarDriver::BUFFER_DIM+5; i++)
     {
       driver_test.new_scan(distances);//inserisco una nuova scansione nel buffer
       distances = generate_distances();
     }
   //testing di get_scan
-  for(int i = 0 ; i < LidarDriver.BUFFER_DIM; i++)
+  for(int i = 0 ; i < LidarDriver::BUFFER_DIM; i++)
   {
     std::vector<double> v = driver_test.get_scan();
     print_vector(v);
   }
   //testing di clear buffer
-  for(int i = 0 ; i<LidarDriver.BUFFER_DIM+5; i++)
+  for(int i = 0 ; i<LidarDriver::BUFFER_DIM+5; i++)
     {
       driver_test.new_scan(distances);
       distances = generate_distances();

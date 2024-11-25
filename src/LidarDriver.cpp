@@ -113,8 +113,8 @@ std::ostream &operator<<(std::ostream &out, const LidarDriver &lid)
     for(double i : scan)
     {
         measures += std::to_string(current_angle) + "° : "+ std::to_string(i) + "\n";
-        if((current_angle+ang_res)<LidarDriver.MAX_RANGE)current_angle += ang_res;
-        else current_angle = LidarDriver.MAX_RANGE;
+        if((current_angle+ang_res)<LidarDriver::MAX_RANGE)current_angle += ang_res;
+        else current_angle = LidarDriver::MAX_RANGE;
     } 
     return out << measures;
     } 
