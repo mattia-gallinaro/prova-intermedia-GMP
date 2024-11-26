@@ -47,6 +47,7 @@ std::vector<double> LidarDriver::get_scan(void)
 //sono due foreach,  li devo testare
 void LidarDriver::clear_buffer(void)
 {
+    if(!is_buffer_empty()){
     for(auto i: buffer) //auto può essere sostituito con std::vector<double>,
                         //fa si che sia il compilatore ad assegnare automaticamente il tipo di dato , è il T
     {
@@ -54,6 +55,7 @@ void LidarDriver::clear_buffer(void)
     }
     oldest_scan = 0;
     newest_scan = -1; //per indicare che ora il buffer non contiene più nessuna lettura
+}
 }
 
 double LidarDriver::get_distance(double angle) const 
