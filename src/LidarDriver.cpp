@@ -26,7 +26,7 @@ void LidarDriver::new_scan(const std::vector<double>& scan)
         size_to_copy = scan.size();
         std::fill(buffer[newest_scan].begin() + size_to_copy, buffer[newest_scan].end(), 0);
     }
-    std::copy(scan.begin(), scan.begin() + size_to_copy - 1, buffer[newest_scan].begin());// permette di copiare tutti i valori possibili da scan in buffer
+    std::copy(scan.begin(), scan.begin() + size_to_copy, buffer[newest_scan].begin());// permette di copiare tutti i valori possibili da scan in buffer
 }
 
 std::vector<double> LidarDriver::get_scan(void)
