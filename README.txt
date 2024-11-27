@@ -50,15 +50,15 @@ Chi ha sviluppato cosa:
             - metodo clear_buffer();
             - metodo get_distance();
         - in main.cpp:
-            - test per le i metodi della classe LidarDriver
+            - test per i metodi della classe LidarDriver
 
 Funzione aggiunte rispetto a quelle richieste :
     - in header e LidarDriver.cpp son state aggiunte:
-        - "int increment(int index) " : ritorna l'indice aumentato di 1 , oppure 0 nel caso in cui l'indice aveva raggiunto la fine del buffer 
-        - "bool is_buffer_empty(void) const" : controlla se il buffer non contenga scansioni verificando se newest_scan ha valore -1 , il -1 indica che non ci sono scansioni presenti nel buffer
+        - "int increment(int index) " : ritorna l'indice aumentato di 1 , oppure 0 nel caso in cui l'indice aveva raggiunto la fine del buffer (incremento circolare)
+        - "bool is_buffer_empty(void) const" : controlla se il buffer non contiene scansioni verificando se newest_scan ha valore -1 , il -1 indica che non ci sono scansioni presenti nel buffer
         - "double get_res(void) const"  : ritorna il valore della risoluzione angolare
         - "std::vector<double> get_newest_scan(void) const" : ritorna l'ultima scansione aggiunta nel buffer, se non ce ne sono presenti , ritorna un errore
     - in main.cpp
         - " std::vector<double> generate_distances(void) " :  genera un vettore di 361 elementi double generati randomicamente
-        - " void print_vector(const std::vector<double>& v) " : funzione per stampare il vettore
+        - " void print_vector(const std::vector<double>& v) " : funzione per stampare un vettore di double
         - " void print_angle(const std::vector<double>& v,int position) " : funzione che stampa la distanza relativa ad un dato angolo, serve come verifica del metodo get_distance della classe LidarDriver
