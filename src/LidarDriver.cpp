@@ -15,71 +15,60 @@ LidarDriver::LidarDriver(double ang_res)
 //member functions
 void LidarDriver::new_scan(const std::vector<double>& scan)
 {
-    for(double i : scan)
+    for(double i : scan)//controlla la presenza di eventuali valori negativi
     {
         if(i< 0) throw std::invalid_argument("negative values not allowed");
     }
     int size_to_copy = (MAX_RANGE / res) + 1;
-    if(increment(newest_scan)== oldest_scan && !is_buffer_empty()) oldest_scan = increment(oldest_scan);
+    if(increment(newest_scan)== oldest_scan && !is_buffer_empty()) oldest_scan = increment(oldest_scan);//controlli necessari garantire la circolarità del buffer
     newest_scan = increment(newest_scan);
-    buffer[newest_scan].resize(size_to_copy,0);
-    if(size_to_copy > scan.size()) size_to_copy = scan.size();
-    std::copy(scan.begin(), scan.begin() + size_to_copy, buffer[newest_scan].begin());// permette di copiare tutti i valori possibili da scan in buffer
+    buffer[newest_scan].resize(size_to_copy,0);//settiamo a 0 i valori della scansione riportando la dimensione logica delle scansioni del buffer al valore giusto
+    if(size_to_copy > scan.size()) size_to_copy = scan.size();//verifica se le scansioni esterne sono più piccole (se sono  troppo grandi le tronca automaticamente)
+    std::copy(scan.begin(), scan.begin() + size_to_copy, buffer[newest_scan].begin());
 }
 
 std::vector<double> LidarDriver::get_scan(void)
 {
     if(is_buffer_empty())throw std::invalid_argument("Il buffer e' vuoto");
-    std::vector<double> container((MAX_RANGE / res) + 1, 0);//sto inizializzando un nuovo vettore double con 181 valori a 0 che conterra' le letture da restituire
-    std::copy(buffer[oldest_scan].begin(), buffer[oldest_scan].end(), container.begin());
-    buffer[oldest_scan].clear();
-    if(oldest_scan == newest_scan){
+    std::vector<double> container((MAX_RANGE / res) + 1, 0);//container usato per restituire la scansione che viene rimossa dal buffer
+    std::copy(buffer[oldest_scan].begin(), buffer[oldest_scan].end(), container.begin());//copia della scansione da rimuovere su container
+    buffer[oldest_scan].clear();//rimozione della scansione più vecchia dal buffer
+    if(oldest_scan == newest_scan){//setto gli indici in caso abbia rimosso l'ultimo elemento
         oldest_scan = 0;
         newest_scan = -1;
-    }//lo faccio perchè ho "eliminato" l'ultima scansione presente
-    else{
+    }
+    else{//la scansione più vecchia ora è cambiata
         oldest_scan = increment(oldest_scan);
     }
     return container;
 }
-//sono due foreach,  li devo testare
+
 void LidarDriver::clear_buffer(void)
 {
     if(!is_buffer_empty()){
-    for(auto i: buffer) //auto può essere sostituito con std::vector<double>,
-                        //fa si che sia il compilatore ad assegnare automaticamente il tipo di dato , è il T
+    for(auto i: buffer) //rimuovo ogni scansione dal buffer                    
     {
-        i.clear();
+        i.clear();//clear() funzione di std::vector
     }
     oldest_scan = 0;
-    newest_scan = -1; //per indicare che ora il buffer non contiene più nessuna lettura
+    newest_scan = -1; 
 }
 }
 
 double LidarDriver::get_distance(double angle) const 
 {
-    if (angle < 0 || angle > MAX_RANGE)throw std::invalid_argument("angle not valid must be between 0 and 180"); //così siamo sicuri che si possa cercare un'angolo 
-    // buffer vuoto
-    if (is_buffer_empty())throw std::invalid_argument("Il buffer e' vuoto");// per ora ho messo invalid_argument , bisogna modificarlo con uno più specifico per indicare che il buffer non contiene scansioni
+    if (angle < 0 || angle > MAX_RANGE)throw std::invalid_argument("angle not valid must be between 0 and 180"); 
+    
+    if (is_buffer_empty())throw std::invalid_argument("Il buffer e' vuoto");
 
-    // calcola la posizione della teoretica lettura in base alla risoluzione
-    // per accomodare che la risoluzione e' fornita dall'utente, arrotondo per trovare l'indice
-    double num_lettura = angle / res; 
+    double num_lettura = angle / res; //necessario per trovare l'indice da andare a leggere nell'ultima scansione fatta
     int index = (int) std::round(num_lettura);
-
-    //if(index < 0) return buffer[newest_scan][0]; non serve perchè non dovremmo accettare valori negativi siccome sono sempre al di fuori dell'array
-
-    // lunghezza della scansione piu' recente, la uso per controllare che l'angolo fornito in input non sbordi
-    // int newest_size = buffer[newest_scan].size();
-    // angolo fornito va oltre le letture fatte, restituisci l'ultima lettura fatta
-    // else if(index > newest_size) return buffer[newest_scan][newest_size - 1];  <- non dovrebbe servire perchè l'angolo che dovrebbe passare deve essere compreso tra 0 e 180 così l'utente non può leggere valori al di fuori dell'array
-
     return buffer[newest_scan][index];
 }
 
 std::vector<double> LidarDriver::get_newest_scan(void) const
 {
-    if(is_buffer_empty())throw std::invalid_argument("il buffer è vuoto");
+    if(is_buffer_empty())throw std::invalid_argument("Il buffer è vuoto");
     return buffer[newest_scan];
 }
 
@@ -91,7 +80,7 @@ double LidarDriver::get_res(void) const
 
 int LidarDriver::increment(int index)
 {
-    if(index==BUFFER_DIM-1) index = 0;
+    if(index==BUFFER_DIM-1) index = 0;//incremento circolare -> se sono alla fine ricomincio da posizione 0 
     else index++;
     return index;
 }
@@ -110,7 +99,7 @@ std::ostream &operator<<(std::ostream &out, const LidarDriver &lid)
     std::string measures = "";
     double current_angle = 0;
 
-    for(double i : scan)
+    for(double i : scan)//creo una stringa contenente angoli e reltive misurazioni dell'ultima scansione fatta presente nel buffer
     {
         measures += std::to_string(current_angle) + "° : "+ std::to_string(i) + "\n";
         if((current_angle+ang_res)<LidarDriver::MAX_RANGE)current_angle += ang_res;
