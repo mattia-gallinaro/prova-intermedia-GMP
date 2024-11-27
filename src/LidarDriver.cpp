@@ -34,7 +34,7 @@ std::vector<double> LidarDriver::get_scan(void)
     if(is_buffer_empty())throw std::invalid_argument("Il buffer e' vuoto");
     std::vector<double> container((MAX_RANGE / res) + 1, 0);//sto inizializzando un nuovo vettore double con 181 valori a 0 che conterra' le letture da restituire
     std::copy(buffer[oldest_scan].begin(), buffer[oldest_scan].end(), container.begin());
-    std::fill(buffer[oldest_scan].begin(), buffer[oldest_scan].end(), 0);//resetto l'array che contiene le misurazioni meno recenti a 0
+    buffer[oldest_scan].clear();
     if(oldest_scan == newest_scan){
         oldest_scan = 0;
         newest_scan = -1;
@@ -51,7 +51,7 @@ void LidarDriver::clear_buffer(void)
     for(auto i: buffer) //auto può essere sostituito con std::vector<double>,
                         //fa si che sia il compilatore ad assegnare automaticamente il tipo di dato , è il T
     {
-        std::fill(i.begin(), i.end(), 0);// riempio il buffer con 0
+        i.clear();
     }
     oldest_scan = 0;
     newest_scan = -1; //per indicare che ora il buffer non contiene più nessuna lettura
