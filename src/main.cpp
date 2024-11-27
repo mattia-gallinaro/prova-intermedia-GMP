@@ -17,6 +17,7 @@ int main(void){
   //LidarDriver driver_test{0.3}
 
   //test di get_scan() con buffer vuoto
+  std::cout << "Test di get scan con buffer vuoto " << std::endl;
     try{
       driver_test.get_scan();
     }catch(std::invalid_argument e) {
@@ -25,6 +26,7 @@ int main(void){
 
 
   //test di new_scan()
+  std::cout << "Test di new scan per riempire il buffer " << std::endl;
     std::vector<double> distances = generate_distances();
     for(int i = 0 ; i<LidarDriver::BUFFER_DIM+5; i++)
     {
@@ -34,6 +36,7 @@ int main(void){
 
 
   //test di get_scan()
+  std::cout << "Test di get scan per svuotare il buffer " << std::endl;
   for(int i = 0 ; i < LidarDriver::BUFFER_DIM; i++)
   {
     std::vector<double> v = driver_test.get_scan();
@@ -42,13 +45,14 @@ int main(void){
 
 
   //test di clear_buffer(), verifico poi con get_scan() che sia effettivamente vuoto il buffer
+  std::cout << "Test di clear buffer " << std::endl;
   for(int i = 0 ; i<LidarDriver::BUFFER_DIM+5; i++)
     {
       driver_test.new_scan(distances);
       distances = generate_distances();
     }
   driver_test.clear_buffer();
-  try{
+  try{//verifico che dopo clear_buffer() , il buffer sia vuoto usando  get_scan()
       driver_test.get_scan();
     }catch(std::invalid_argument e) {
       std::cout << "il buffer e' vuoto" << std::endl;
@@ -56,6 +60,7 @@ int main(void){
 
 
   //test di get_distance()
+  std::cout << "Test di get_distance con angolo 104 " << std::endl;
   driver_test.new_scan(distances);
   double angle = 104;//angolo cercato in [0,180]
   std::cout<<"distance at angle "<< angle<<"° : "<<driver_test.get_distance(angle)<<std::endl;
@@ -72,11 +77,11 @@ int main(void){
 //vedi commento dichiarazione
 std::vector<double> generate_distances(void){
   int lower = 0;
-  int upper = 2;
+  int upper = 2;//lower e upper sono il range di valori tra cui vengono estratti i valori random
   std::default_random_engine rnd{std::random_device{}()};//permette di generare i numeri random 
   std::uniform_real_distribution<double> dist(lower, upper);//per far si che ogni numero abbia la stessa probabilità di uscire
-  std::vector<double> buff(181);//scansioni da inserire di 181 elementi, dunque saranno meno di quelli richiesti dalle scansioni del buffer in caso la risoluzione angolare sia <1
-  for(int i = 0; i < 181; i++) buff[i] = dist(rnd);
+  std::vector<double> buff(361);//scansioni da inserire di 361 elementi, dunque saranno meno di quelli richiesti dalle scansioni del buffer in caso la risoluzione angolare sia < 0.5
+  for(int i = 0; i < 361; i++) buff[i] = dist(rnd);
   return buff;
 }
 
