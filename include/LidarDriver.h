@@ -28,7 +28,7 @@ std::vector<std::vector<double>> buffer;
 int oldest_scan{0};
 int newest_scan{-1};
 int increment(int index);
-bool is_buffer_empty(void);
+bool is_buffer_empty(void) const;
 };
 
 std::ostream &operator<<(std::ostream &out,  const LidarDriver &lid);

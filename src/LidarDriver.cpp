@@ -20,7 +20,7 @@ void LidarDriver::new_scan(const std::vector<double>& scan)
         if(i< 0) throw std::invalid_argument("negative values not allowed");
     }
     int size_to_copy = (MAX_RANGE / res) + 1;
-    if(increment(newest_scan)== oldest_scan && is_buffer_empty()) oldest_scan = increment(oldest_scan);
+    if(increment(newest_scan)== oldest_scan && !is_buffer_empty()) oldest_scan = increment(oldest_scan);
     newest_scan = increment(newest_scan);
     if(size_to_copy > scan.size()) {
         size_to_copy = scan.size();
@@ -98,7 +98,8 @@ int LidarDriver::increment(int index)
     return index;
 }
 
-bool LidarDriver::is_buffer_empty(void){
+bool LidarDriver::is_buffer_empty(void) const
+{
 return newest_scan == -1;
 }
 
